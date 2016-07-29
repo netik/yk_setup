@@ -1,0 +1,100 @@
+#!/usr/bin/expect 
+
+set timeout 60
+set keyid [ exec /usr/local/bin/gpg --list-keys | grep pub | grep 2048 | cut -d/ -f2 | cut -d " " -f1 ]
+
+spawn gpg --edit-key $keyid
+
+# signing key 
+expect "gpg> "
+send "addcardkey\r"
+
+expect "selection? "
+send "1\r"
+
+# deal with replacing the key if need be
+expect {
+   "What keysize" {
+      send "2048\r"
+   }
+   "Replace existing key" { 
+      send "y\r"
+      expect "What keysize" {
+        send "2048\r"
+      }  
+   }
+}
+
+expect "is valid for"
+send "2y\r"
+
+expect "Is this correct? (y/N)"
+send "y\r"
+
+send_user -- "\n\n=== KEY CREATION TAKES TIME - BE PATIENT. ===\n\n"
+
+expect "Really create? (y/N)"
+send "y\r"
+
+expect "gpg> "
+
+# authentication key
+send "addcardkey\r"
+
+expect "selection? "
+send "3\r"
+
+# deal with replacing the key if need be
+expect {
+   "What keysize" {
+      send "2048\r"
+   }
+   "Replace existing key" { 
+      send "y\r"
+      expect "What keysize" {
+        send "2048\r"
+      }  
+   }
+}
+
+expect "is valid for"
+send "2y\r"
+
+expect "Is this correct? (y/N)"
+send "y\r"
+
+send_user -- "\n\n=== KEY CREATION TAKES TIME - BE PATIENT. ===\n\n"
+
+expect "Really create? (y/N)"
+send "y\r"
+
+# toggle into the private encryption key 
+expect "gpg> "
+send "toggle\r"
+
+expect "gpg> "
+send "key 1\r"
+
+expect "gpg> "
+send "keytocard\r"
+
+expect "selection? "
+send "2\r"
+
+send_user -- "\n\n=== PLEASE ALLOW THIS SCRIPT TO RUN UNTIL YOU SEE \"save\" ===\n\n"
+set timeout 5
+
+expect {
+   "gpg> " { 
+     exp_continue
+   }
+   "Replace existing key" { 
+      send "y\r"
+      expect "gpg> "
+   }
+}
+
+send "save\r"
+expect "gpg> "
+
+

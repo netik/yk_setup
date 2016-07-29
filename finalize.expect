@@ -1,0 +1,34 @@
+#!/usr/bin/expect
+
+set keyid [ exec env GNUPGHOME=~/USB /usr/local/bin/gpg --list-keys | grep pub | grep 2048 | cut -d/ -f2 | cut -d " " -f1 ]
+puts $keyid
+
+spawn gpg --card-edit
+
+expect "gpg/card> "
+send "admin\r"
+
+expect "gpg/card> "
+send "passwd\r"
+
+send_user -- "\n=== We will now change the card's pin and admin PIN.\n=== Please enter the old pin, followed by a new PIN.\n\n"
+
+set timeout 600
+
+expect "selection? "
+send "1\r"
+
+expect "selection? "
+send "3\r"
+
+expect "selection? "
+send "q\r"
+
+set timeout 10
+
+expect "gpg/card> "
+send "forcesig\n"
+
+expect "gpg/card> "
+
+

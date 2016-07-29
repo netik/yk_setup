@@ -1,0 +1,31 @@
+#!/usr/bin/expect
+
+# ask gpg to make encryption subkeys for us. 
+
+set keyid [ exec /usr/local/bin/gpg --list-keys | grep pub | grep 2048 | cut -d/ -f2 | cut -d " " -f1 ]
+spawn gpg --edit-key $keyid
+
+expect "gpg> "
+send "addkey\r"
+
+expect "selection? "
+send "6\r"
+
+expect "What keysize"
+send "2048\r"
+
+expect "is valid for"
+send "2y\r"
+
+expect "Is this correct? (y/N)"
+send "y\r"
+
+expect "Really create? (y/N)"
+send "y\r"
+
+expect "gpg> "
+send "save\r"
+
+expect "gpg> "
+
+
