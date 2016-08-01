@@ -16,11 +16,12 @@ MYDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 TODAY=`date +'%Y-%m-%d'`
 
 export KEYID=`gpg --list-keys | grep pub | grep 2048 | cut -d/ -f2 | cut -d' ' -f1`
-  
+
 # destroy the symlink
 if [ -L $HOME/.gnupg ]; 
 then
   echo "[*] Removing .gnupg symlink"
+
   rm $HOME/.gnupg
   echo
   echo "[*] REMOVE AND REINSERT THE YUBIKEY NOW. Type [y] when ready!"
@@ -34,7 +35,6 @@ then
 else
   # the symlink is gone, so we have to get the KEYID a different way...
   echo "[*] Get keyID from $HOME/USB"
-
   if [ -d $HOME/USB ]; then
     export KEYID=`env GNUPGHOME=${HOME}/USB gpg --list-keys | grep pub | grep 2048 | cut -d/ -f2 | cut -d' ' -f1`
   else

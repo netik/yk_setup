@@ -3,7 +3,8 @@
 # SSH automatic agent discovery
 
 function sshagent_findsockets {
-    find $HOME/.gnupg -uid $(id -u) -type s -name S.gpg-\*.ssh 2>/dev/null
+    # we want to find mac gpg, not the system-wide one in /private
+    find $HOME/.gnupg -uid $(id -u) -type s -name S.gpg-\*.ssh | egrep -v ^/private 2>/dev/null
 }
 
 function sshagent_testsocket {
@@ -11,13 +12,19 @@ function sshagent_testsocket {
         echo "ssh-add is not available; agent testing aborted"
         return 1
     fi
-
+    
     if [ X"$1" != X ] ; then
         export SSH_AUTH_SOCK=$1
     fi
 
     if [ X"$SSH_AUTH_SOCK" = X ] ; then
         return 2
+    fi
+
+    if [[ $SSH_AUTH_SOCK =~ ^/private ]]
+    then
+       echo "Ignoring Apple's gpg-agent."
+       return 3 
     fi
 
     if [ -S $SSH_AUTH_SOCK ] ; then
@@ -39,7 +46,6 @@ function sshagent_testsocket {
 function sshagent_init {
     # ssh agent sockets can be attached to a ssh daemon process or an
     # ssh-agent process.
-
     AGENTFOUND=0
 
     # Attempt to find and use the ssh-agent in the current environment
@@ -50,6 +56,7 @@ function sshagent_init {
     # process.
     if [ $AGENTFOUND = 0 ] ; then
         for agentsocket in $(sshagent_findsockets) ; do
+	    echo "socket $agentsocket"
             if [ $AGENTFOUND != 0 ] ; then break ; fi
             if sshagent_testsocket $agentsocket ; then AGENTFOUND=1 ; fi
         done

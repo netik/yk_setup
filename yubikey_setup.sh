@@ -2,7 +2,7 @@
 #
 # yubikey_setup.sh
 #
-# J. Adams <jna@retina.net> 
+# J. Adams <jna@bolt.me> 
 # 7/27/2016
 #
 # Set up GPG keys and your yubikey neo.
@@ -17,6 +17,9 @@ TODAY=`date +'%Y-%m-%d'`
 
 clear
 cat <<EOF
+
+Welcome to Bolt Yubikey Setup.
+---------------------------------
 === THIS SCRIPT REPLACES EXISTING GPG CONFIGURATIONS AND KEYS 
 === USE CAUTION! 
 

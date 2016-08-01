@@ -23,7 +23,6 @@ Things to do now:
 3. Secure-erase the ~/USB directory from this system (using "srm -rf
    ~/USB").  It contains the last copy of your private key.
 
-4. Set up SSH.
+4. Set up SSH. See: https://phabricator.corp.bitfellow.com/w/yubikey/
    (or run "./setup_ssh.sh" to install fresh keys.)
-      
 EOF
