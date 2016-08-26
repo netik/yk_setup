@@ -82,7 +82,7 @@ expect "selection? "
 send "2\r"
 
 send_user -- "\n\n=== PLEASE ALLOW THIS SCRIPT TO RUN UNTIL YOU SEE \"save\" ===\n\n"
-set timeout 5
+set timeout 20
 
 expect {
    "gpg> " { 
