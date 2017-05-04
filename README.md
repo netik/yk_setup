@@ -17,13 +17,9 @@ Apple runs their own gpg-agent. We must disable this for MacGPG2 to run, because
 
 However, this OS uses system integrity protection and you cannot disable the native GPG agent without some work.
 
-To turn off SIP, perform the following:
+I used to recommend that you disable SIP and then get MacGPG to take over the work. I no longer recommend this as having SIP is useful to protect your machine. 
 
-1. Boot in to recovery mode (reboot, hold "R")
-2. Run a terminal, issue csrutil disable
-3. Re-run the setup_ssh script
-4. Boot in to recovery mode (reboot, hold "R")
-5. Run a terminal, issue csrutil enable
+The best thing you can do now is run Mac GPG alongside the system GPG agent, and repoint your GPG_AGENT to the Mac GPG Socket instead of the system socket.
 
 ## Starting Over
 
